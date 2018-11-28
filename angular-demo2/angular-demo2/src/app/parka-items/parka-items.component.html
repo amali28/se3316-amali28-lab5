@@ -1,0 +1,25 @@
+<h2>
+    List of Parkas
+</h2>
+
+<table>
+    <tr *ngFor='let parka of _response'>
+        <td><b>Name</b><br> {{parka.name}}</td>
+        <td><b>Price</b><br>{{parka.price}}</td>
+        <td><b>ID</b><br>{{parka._id}}</td>
+        <td><b>Quantity</b><br>{{parka.quantity}}</td>
+        <td><b>Tax</b><br>{{parka.tax}}</td>
+    </tr>
+</table>
+
+<button (click)="onClick()" >Get Parkas</button>
+
+<h2>
+    Add a New Parka
+</h2>
+
+<input #name type="text" placeholder="Parka Name"/><br><br>
+<input #price type="text" placeholder="Price" /><br><br>
+<input #quantity type="text" placeholder="Quantity" /><br><br>
+<input #tax type ="text" value = "0.13" /><br><br>
+<button (click) = "addParka(name.value, price.value, quantity.value, tax.value)">Add</button>
