@@ -82,41 +82,52 @@ router.route('/login')
         // request the email and the password from the front end 
         var email = req.body.email;
         var password = req.body.password;
-        var isVerified = req.body.isVerified;
         
         // check if the email is valid
-        
-        if (email == ""){
-            return res.json({message: 'Please enter a valid email'})
+        if (email === ""){
+            res.send({message: 'Empty email has been entered'});
         }
         
-        if (password == ""){
-            return res.json({message: 'Please enter a valid password'})
+        if (password === ""){
+            res.send({message: "Empty password has been entered"});
         }
         
-        User.find({'email': email}, function (err, acc){
-            
-            if (acc[0] == null){
-                return res.json({message: 'Invalid email was entered.'});
+        User.findOne({email: email}, function(err, foundObject) {
+            if (err){
+                console.log(err);
             }
+            if (!foundObject){
+                res.send({message: "This account does not exist"});
+            } 
             
-            var isValidPassword = bcrypt.compareSync(password, acc[0]['password']);
+            var isValidPassword = bcrypt.compareSync(password, foundObject.password);
             
             if (!isValidPassword){
-                return res.json({message: 'Invalid password was entered'});
-            }      
-            
-            if ((acc[0]['isVerified'] == false)){
-                acc[0]['isLoggedIn'] = true;
-                res.send(acc[0]['isLoggedIn']);
+                res.send({message: "The entered password is incorrect"})
             } else {
-                res.send({message:'Success: ', email: acc.email});
+                var isVerified = foundObject.isVerified;
+            
+                if (!isVerified){
+                    res.send({message: "Go verify!"})
+                } else {
+                    
+                    foundObject.isLoggedIn = true;
+                    foundObject.save(function(err, updatedObject){
+                       console.log(updatedObject);
+                       if (err){
+                           console.log(err);
+                       } 
+                       if (updatedObject){
+                           res.send({message: "Logged in!"});
+                       }
+                    });
+                    
+                  
+                    
+                }
             }
             
-            if (err){
-                return res.send("Error: " + err);
-            }
-        });
+        })
     });
 
 router.route('/homepage')
@@ -175,7 +186,7 @@ router.route('/createuser')
                      var emailVerification;
         
                      host=req.get('host')
-                     verificationLink = "https://"+req.get('host')+"/verify?id="+verificationCode;
+                     verificationLink = "https://"+req.get('host')+"/api/verify/"+verificationCode;
         
                      emailVerification={
                        to : req.body.email,
@@ -206,72 +217,30 @@ router.route('/createuser')
     })
     
     
-app.get('/verify/?id=', function(req, res) {
-    
-    host = req.get('host');
-    verificationCode = req.query.id;
-    User.findOne({verificationCode: verificationCode}), function (err, returnedUser){
-        if (err){
-            console.log(err);
-        } else {
-            returnedUser.email;
-            returnedUser.password;
-            returnedUser.isVerified;
-        }
-    }
-    //res.redirect('/verify?id=/' + verificationCode);
-    
-    
-})
 
-
-/*
-router.put('/verify?id=',function(req,res){
+router.get('/verify/:id',function(req,res){
  
-    console.log("Domain is matched. Information is from authentic email");
-    if(req.query.vcode ==verificationCode)
-    {
-        console.log("email is verified");
-        res.end("Email has been Successfully verified");
-        
-        User.findOne({verificationCode: verificationCode}, function(err, foundObject){
-            
-            if (err){
-                console.log(err);
-                res.status(500).send();
-            } else {
-                
-                if (!foundObject){
-                    res.status(404).send();
-                } else {
-                    
-                    foundObject.isVerified = true;
-                    
+    console.log("Stepped into verify");
+    User.findOne({verificationCode: req.params.id}, function (err, foundObject){
+        console.log(foundObject);
+        if (foundObject != null){
+             foundObject.isVerified = true;
                     foundObject.save(function(err, updatedObject){
+                       console.log(updatedObject);
                        if (err){
                            console.log(err);
-                       } else {
-                           foundObject.send(updatedObject);
+                       } 
+                       if (updatedObject){
+                           res.send({message: "VERIFIED"});
                        }
                     });
-                }
-                
-            }
-            
-        })
-    
-        
-    }
-    else
-    {
-        console.log("email is not verified");
+        } else {
+            res.status(404).send();
+             console.log("Email is not verified");
         res.end("<h1>Bad Request</h1>");
-    }
-});
-
-
-*/
-
+        }
+    })
+    });
 
 router.route('/items')
 
