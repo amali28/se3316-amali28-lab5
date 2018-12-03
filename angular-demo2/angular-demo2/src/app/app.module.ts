@@ -8,18 +8,46 @@ import { ParkaItemsComponent } from './parka-items/parka-items.component';
 import { ParkaItemsService } from './parka-items.service';
 import { RetrieveParkasComponent } from './retrieve-parkas/retrieve-parkas.component';
 import { LoginComponent } from './login/login.component';
+import { AboutComponent } from './about/about.component';
+import { RouterModule } from '@angular/router';
+import { HomeComponent } from './home/home.component';
+import { SignupComponent } from './signup/signup.component';
+import { UserhomeComponent } from './userhome/userhome.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ParkaItemsComponent,
     RetrieveParkasComponent,
-    LoginComponent
+    LoginComponent,
+    AboutComponent,
+    HomeComponent,
+    SignupComponent,
+    UserhomeComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule, 
+      RouterModule.forRoot([
+      {
+        path: '',
+        component: HomeComponent
+      },
+      {
+        path: 'login',
+        component: LoginComponent
+      },
+      {
+        path: 'signup',
+        component: SignupComponent
+      },
+      {
+        path: 'userhome',
+        component: UserhomeComponent
+      }
+      ])
+  ],
   ],
   providers: [ParkaItemsService],
   bootstrap: [AppComponent]

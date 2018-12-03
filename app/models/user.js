@@ -5,7 +5,8 @@ var UserSchema  = new Schema({
 	email: String,
 	password: String,
 	verificationCode: String,
-	isLoggedIn: Boolean
+	isLoggedIn: Boolean,
+	isVerified: Boolean
 });
 
 module.exports = mongoose.model('User', UserSchema);
