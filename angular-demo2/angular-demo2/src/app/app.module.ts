@@ -15,7 +15,8 @@ import { SignupComponent } from './signup/signup.component';
 import { UserhomeComponent } from './userhome/userhome.component';
 import { LoginService } from './login.service';
 import { SignupService } from './signup.service';
-
+import { NeedtoverifyComponent } from './needtoverify/needtoverify.component';
+import { ResendService } from './resend.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -25,7 +26,8 @@ import { SignupService } from './signup.service';
     AboutComponent,
     HomeComponent,
     SignupComponent,
-    UserhomeComponent
+    UserhomeComponent,
+    NeedtoverifyComponent
   ],
   imports: [
     BrowserModule,
@@ -48,10 +50,14 @@ import { SignupService } from './signup.service';
       {
         path: 'userhome',
         component: UserhomeComponent
+      },
+      {
+        path: 'resend/:id',
+        component: NeedtoverifyComponent
       }
       ])
   ],
-  providers: [ParkaItemsService, LoginService, SignupService],
+  providers: [ParkaItemsService, LoginService, SignupService, ResendService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

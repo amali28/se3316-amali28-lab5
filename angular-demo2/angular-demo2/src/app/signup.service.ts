@@ -19,7 +19,7 @@ export class SignupService {
           console.log(localStorage.getItem('user'));
       }
       
-      call(data['message']);
+      call(data['verificationCode']);
     })
   }
 }

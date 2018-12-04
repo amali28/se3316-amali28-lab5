@@ -32,8 +32,8 @@ export class LoginComponent implements OnInit {
    if (res == "Logged in!"){
       this._router.navigateByUrl('userhome');
    }
- 
- 
-
+   if (res == "This account does not exist"){
+       alert("This account does not exist. Please check the information entered");
+   }
 }
 }

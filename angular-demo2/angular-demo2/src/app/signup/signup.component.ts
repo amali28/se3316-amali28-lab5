@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { SignupService } from '../signup.service';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http'
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-signup',
@@ -23,8 +23,9 @@ export class SignupComponent implements OnInit {
   onResponse(res: string){
     
    this.response = res;
-   if (res == "Account has successfully been created"){
-      this._router.navigateByUrl('userhome');
+   
+   if (res){
+      this._router.navigateByUrl('resend/' +  res);
    }
 }
 }

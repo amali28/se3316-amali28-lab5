@@ -20,8 +20,6 @@ const bcrypt = require('bcrypt');
 const saltRounds = 10;
 const nodemailer = require('nodemailer');
 
-
-
 var verificationLink, host, verificationCode;
 var emailSender = nodemailer.createTransport({
     service: "Gmail",
@@ -119,6 +117,7 @@ router.route('/login')
                        } 
                        if (updatedObject){
                            res.send({message: "Logged in!"});
+                           
                        }
                     });
                     
@@ -135,6 +134,25 @@ router.route('/homepage')
         res.send({message: 'Yo'});
     });
     
+router.route('/resend/:id')
+
+    .post(function(req,res){
+        console.log();
+        User.findOne({verificationCode: req.body.verificationCode.id}, function (err, foundObject){
+        
+            if (err){
+                res.send({message: err});
+                console.log(err);
+            } 
+            
+            if (foundObject){
+                res.send({message: "Email resent"})
+                sendEmailVerification(req.get('host'), foundObject.email);
+            } else {
+                res.send({message: "No user found"});
+            }
+    })
+    });
     
 
 router.route('/createuser')
@@ -175,34 +193,19 @@ router.route('/createuser')
         
         User.find({'email':newEmail}, function (err, acc){
             // if the response received demonstrates that the account has not been created, go forward with signing up the user
-
-            
             if(acc[0] == null){
                 newUser.save(function(err){
                     if (err){
                         res.send(err);
                     }
                     
-                     var emailVerification;
-        
-                     host=req.get('host')
-                     verificationLink = "https://"+req.get('host')+"/api/verify/"+verificationCode;
-        
-                     emailVerification={
-                       to : req.body.email,
-                       subject : "PARKA EMAIL VERIFICATION",
-                       html : "Use the following code to URL to verify your account: " + verificationLink, 
-                     }
-        
-                    emailSender.sendMail(emailVerification, function(error, response){
-                    if(error){
-                        console.log(error);
-                         res.end("Error.");
-                    } else{
-                         res.end("Email has successfully been sent.");
-                    }
-                 });
-                    res.json({message: "Account has successfully been created"});
+                   var didSendEmail = sendEmailVerification(req.get('host'), req.body.email);
+                   
+                   if (didSendEmail){
+                       res.json({message: "Account has successfully been created", verificationCode: verificationCode});
+                   } else {
+                       res.json({message: "An account with this email has already been registered."});
+                   }
                 });
             } else {
                 res.json({message: "An account with this email has already been registered."});
@@ -216,8 +219,31 @@ router.route('/createuser')
        
     })
     
-    
 
+function sendEmailVerification(host, client){
+          var emailVerification;
+        
+            verificationLink = "https://"+host+"/api/verify/"+verificationCode;
+        
+            console.log(verificationLink);
+            
+            emailVerification={
+                       to : client,
+                       subject : "PARKA EMAIL VERIFICATION",
+                       html : "Use the following code to URL to verify your account: " + verificationLink, 
+                     }
+        
+            emailSender.sendMail(emailVerification, function(error, response){
+            if(error){
+                 console.log(error);
+                    return false;
+                } 
+        });
+        return true;
+}
+    
+    
+    
 router.get('/verify/:id',function(req,res){
  
     console.log("Stepped into verify");
