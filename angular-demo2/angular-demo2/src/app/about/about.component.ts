@@ -16,5 +16,8 @@ export class AboutComponent implements OnInit {
 
   ngOnInit() {
   }
+  retrievePolicies(){
+    this._router.navigateByUrl('policy');
+  }
 
 }

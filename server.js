@@ -15,6 +15,7 @@ mongoose.connect('mongodb://amali28-se3316-amali28-lab5-6582532:27017/items', {u
 
 var User    = require('./app/models/user');
 var Item    = require('./app/models/item');
+var Policy  = require('./app/models/policy');
 
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -345,6 +346,66 @@ router.route('/deleteusers/:id')
 	    })
 	})
 	
+router.route('/policy')
+.get(function(req, res) {
+        Policy.find(function(err, foundPolicy) {
+            if (err){
+                res.send(err);
+            }
+            res.json(foundPolicy);
+        });
+    })
+
+router.route('/policy/:id')
+	.put(function(req, res){
+	
+	    Policy.findById(req.params.id, function(err, foundPolicy){
+	  
+	        if (err){
+	            res.send(err);
+	        }
+    
+            foundPolicy.policy1 = req.body.policy1;
+            foundPolicy.policy2 = req.body.policy2;
+            foundPolicy.policy3 = req.body.policy3;
+            
+            foundPolicy.save(function(err) {
+                if (err){
+                    res.send(err);
+                }
+                res.json({ message: 'policy updated' });
+            });
+	    })
+	})
+	
+ 
+  .post(function(req, res) {
+        // create a new instance of the Bear model
+        var policy = new Policy();
+        
+         policy.policy1 = req.body.policy1;  // update the bears info
+         policy.policy2 = req.body.policy2; 
+         policy.policy3 = req.body.policy3; 
+        
+        policy.save(function(err) {
+            if (err){
+               res.send(err);
+            }
+            res.json({ message: 'Policy created!' });
+        });
+    })
+    
+  .delete(function(req, res) {
+		Policy.remove({
+			_id: req.body.id
+		}, function(err, bear) {
+			if (err) {
+				res.send(err);
+			}
+			res.json({ message: 'Successfully deleted policy' });
+		});
+	})
+    
 
 router.route('/modify/:id')
     .delete(function(req, res) {

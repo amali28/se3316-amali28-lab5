@@ -21,6 +21,8 @@ import { AdminpageComponent } from './adminpage/adminpage.component';
 import { RetrieveusersComponent } from './retrieveusers/retrieveusers.component';
 import { RetrieveusersService } from './retrieveusers.service';
 import { PolicyComponent } from './policy/policy.component';
+import { PolicyService } from './policy.service';
+import { ViewpolicyComponent } from './viewpolicy/viewpolicy.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +37,8 @@ import { PolicyComponent } from './policy/policy.component';
     NeedtoverifyComponent,
     AdminpageComponent,
     RetrieveusersComponent,
-    PolicyComponent
+    PolicyComponent,
+    ViewpolicyComponent
   ],
   imports: [
     BrowserModule,
@@ -67,9 +70,13 @@ import { PolicyComponent } from './policy/policy.component';
         path: 'admindash/:id',
         component: AdminpageComponent
       },
+      {
+        path: 'policy',
+        component: ViewpolicyComponent
+      },
       ])
   ],
-  providers: [ParkaItemsService, LoginService, SignupService, ResendService, RetrieveusersService],
+  providers: [ParkaItemsService, LoginService, SignupService, ResendService, RetrieveusersService, PolicyService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

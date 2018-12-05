@@ -1,3 +1,17 @@
-<p>
-  policy works!
-</p>
+<h2>Policies</h2>
+<button (click) ="getPolicies()">Get Policies</button><br><br>
+
+<table>
+    <tr *ngFor='let policy of _response'>
+        <td><b>Policy 1</b><br><textarea #one type="text" name="itemName" ng-model="item.name" required value={{policy.policy1}}></textarea><br><br><br></td>
+        <td><b>Policy 2</b><br><textarea #two type="text" name="itemName" ng-model="item.name" required value={{policy.policy2}}></textarea><br><br><br></td>
+        <td><b>Policy 3</b><br><textarea #three type="text" name="itemName" ng-model="item.name" required value={{policy.policy3}}></textarea><br><br><br></td>
+        <td><button (click)="savePolicies(policy._id, one.value, two.value, three.value)">Save Policies</button></td>
+    </tr>
+</table>
+
+
+
+       
+        
+   
