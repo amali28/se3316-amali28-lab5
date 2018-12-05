@@ -16,6 +16,7 @@ mongoose.connect('mongodb://amali28-se3316-amali28-lab5-6582532:27017/items', {u
 var User    = require('./app/models/user');
 var Item    = require('./app/models/item');
 var Policy  = require('./app/models/policy');
+var Claim   = require('./app/models/claim');
 
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -346,6 +347,27 @@ router.route('/deleteusers/:id')
 	    })
 	})
 	
+router.route('/claims')
+.get(function(req, res) {
+        Claim.find(function(err, foundClaims) {
+            if (err){
+                res.send(err);
+            }
+            res.json(foundClaims);
+        });
+    })
+    
+.delete(function(req, res) {
+		Claim.remove({
+			_id: req.body.id
+		}, function(err, bear) {
+			if (err) {
+				res.send(err);
+			}
+			res.json({ message: 'Successfully deleted claim' });
+		});
+	})
+
 router.route('/policy')
 .get(function(req, res) {
         Policy.find(function(err, foundPolicy) {
@@ -355,6 +377,19 @@ router.route('/policy')
             res.json(foundPolicy);
         });
     })
+ .post(function(req, res){
+     var claim = new Claim();
+     claim.claimName = req.body.claimName;
+     claim.claimDescription = req.body.claimDescription;
+     
+     claim.save(function (err){
+         if (err){
+             res.send(err);
+         }
+         res.json({message: 'Claim created!'})
+     })
+ })
+ 
 
 router.route('/policy/:id')
 	.put(function(req, res){

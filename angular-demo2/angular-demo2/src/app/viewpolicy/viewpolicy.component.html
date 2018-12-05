@@ -16,3 +16,16 @@
 </p>
 
 <h2>Submit Claims for Infringement</h2>
+
+<h4>Claim Type</h4>
+<select #claimName>
+  <option value="Takedown Request">Takedown Request</option>
+  <option value="Infringement Notice">Infringement Notice</option>
+  <option value="Dispute Claim">Dispute Claim</option>
+</select>
+  
+
+<h4>Claim Description</h4>
+<textarea #claimDescription type="text" name="itemName" ng-model="item.name" required value="claim"></textarea>
+<br><br>
+<button (click) = "createClaim(claimName.value, claimDescription.value)">Submit Claim</button>

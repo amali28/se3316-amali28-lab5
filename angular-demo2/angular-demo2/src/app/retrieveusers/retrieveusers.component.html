@@ -1,6 +1,6 @@
-<h2>
+<h3>
     Users in Database
-</h2>
+</h3>
 
 <button (click)="retrieveUsers()">List Users</button>
 <table>
@@ -12,3 +12,5 @@
         <td><b>Options</b><br><button (click) ="updateUser(user._id, isAdminCheck.checked, isDisabled.checked)">Save</button><button (click) = "deleteUser(user._id)">Delete</button></td>
     </tr>
 </table>
+
+<app-viewclaims></app-viewclaims>

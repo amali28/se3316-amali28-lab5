@@ -23,6 +23,7 @@ import { RetrieveusersService } from './retrieveusers.service';
 import { PolicyComponent } from './policy/policy.component';
 import { PolicyService } from './policy.service';
 import { ViewpolicyComponent } from './viewpolicy/viewpolicy.component';
+import { ViewclaimsComponent } from './viewclaims/viewclaims.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { ViewpolicyComponent } from './viewpolicy/viewpolicy.component';
     AdminpageComponent,
     RetrieveusersComponent,
     PolicyComponent,
-    ViewpolicyComponent
+    ViewpolicyComponent,
+    ViewclaimsComponent
   ],
   imports: [
     BrowserModule,

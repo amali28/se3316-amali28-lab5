@@ -17,9 +17,17 @@ export class ViewpolicyComponent implements OnInit {
       this._policyService.getPolicies(this.onResponse.bind(this));
   }
   
+  createClaim(claimName: string, claimDescription: string){
+      this._policyService.createClaim(this.onResponse.bind(this), claimName, claimDescription);
+  }
+  
 
   onResponse(_res: Observable<any[]>){
     this._response = _res;
+    
+    if(_res == "Claim created!"){
+        alert("Your claim has been submitted");
+    }
     }
 
 }

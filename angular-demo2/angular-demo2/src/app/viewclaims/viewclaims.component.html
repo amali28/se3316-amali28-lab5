@@ -1,0 +1,9 @@
+<h3>User Claims</h3>
+<p>Click the button below to view the claims submitted by users.</p>
+<button (click) = "getClaims()">View Claims</button>
+<table>
+    <tr *ngFor = 'let claim of _response'>
+        <td><b>Claim Type</b><br>{{claim.claimName}}</td>
+        <td><b>Claim Description</b><br>{{claim.claimDescription}}</td>
+    </tr>
+</table>

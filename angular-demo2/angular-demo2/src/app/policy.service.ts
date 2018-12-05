@@ -22,5 +22,19 @@ export class PolicyService {
       call_back(data);
     })
   }
-
+  
+  createClaim(call, claimName, claimDescription){
+    this._http.post('/api/policy', {'claimName': claimName, 'claimDescription': claimDescription}).subscribe(data => {
+      console.log(data);
+      call(data['message']);
+    })
+  }
+  
+  getClaims(call_back){
+    this._http.get('/api/claims').subscribe(data => {
+      console.log(data);
+      call_back(data);
+    })
+  }
+  
 }
