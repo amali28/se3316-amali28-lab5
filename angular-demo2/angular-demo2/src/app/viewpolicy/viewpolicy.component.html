@@ -1,3 +1,11 @@
-<p>
-  viewpolicy works!
-</p>
+<div *ngFor = "let policy of _response">
+   <h2>Policy 1</h2>
+   <p> {{policy.policy1}} </p>
+   
+   <h2>Policy 2</h2>
+   <p>{{policy.policy2}}</p>
+   
+   <h2>Policy 3</h2>
+   <p>{{policy.policy3}}</p>
+</div>
+

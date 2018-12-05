@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { PolicyService } from '../policy.service'
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-viewpolicy',
@@ -7,9 +9,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ViewpolicyComponent implements OnInit {
 
-  constructor() { }
+  private _response: Observable<any[]>;
+
+  constructor(private _policyService: PolicyService) { }
 
   ngOnInit() {
+      this._policyService.getPolicies(this.onResponse.bind(this));
+    
   }
+  
+
+  onResponse(_res: Observable<any[]>){
+    this._response = _res;
+    }
 
 }
