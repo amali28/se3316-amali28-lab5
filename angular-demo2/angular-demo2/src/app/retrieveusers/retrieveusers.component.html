@@ -1,0 +1,14 @@
+<h2>
+    Users in Database
+</h2>
+
+<button (click)="retrieveUsers()">List Users</button>
+<table>
+    <tr *ngFor = 'let user of _response'>
+        <td><b>Email</b><br>{{user.email}}</td>
+        <td><b>Admin Priviledges</b><br><input #isAdminCheck type="checkbox" [checked] = user.isAdmin></td>
+        <td><b>Deactivate</b><br><input #isDisabled type="checkbox" [checked] = user.isDisabled></td>
+        <td><b>ID</b><br>{{user._id}}</td>
+        <td><b>Options</b><br><button (click) ="updateUser(user._id, isAdminCheck.checked, isDisabled.checked)">Save</button><button (click) = "deleteUser(user._id)">Delete</button></td>
+    </tr>
+</table>

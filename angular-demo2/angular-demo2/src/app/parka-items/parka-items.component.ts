@@ -22,9 +22,17 @@ export class ParkaItemsComponent implements OnInit {
     this._getParkas.getParkaData(this.onResponse.bind(this));
   }
   
+  deleteParkaData(id: string){
+    this._getParkas.deleteParkaData(id, this.onResponse.bind(this));
+  }
   
-  addParka(p_name: string, p_price: number, p_quantity: number, p_tax: number){
-     this._getParkas.postParkaData(p_name, p_price, p_quantity, p_tax, this.onResponse.bind(this));
+  editParkaData(id: string, p_name: string, p_price: number, p_quantity: number, p_description:string){
+    console.log(p_name);
+    this._getParkas.updateParkaData(id, p_name, p_price, p_quantity, p_description, this.onResponse.bind(this));
+  }
+  
+  addParka(p_name: string, p_price: number, p_quantity: number,p_description: string,  p_tax: number){
+     this._getParkas.postParkaData(p_name, p_price, p_quantity, p_description, p_tax, this.onResponse.bind(this));
   }
   
    onResponse(_res: Observable<any[]>){

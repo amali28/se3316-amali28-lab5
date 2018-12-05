@@ -21,10 +21,9 @@ export class NeedtoverifyComponent implements OnInit {
   resendVerification(){
     
     var verificationCode;
-    this.route.params.subscribe( params =>  verificationCode = params
+    this.route.params.subscribe(params =>  verificationCode = params
     
     );
-    console.log(verificationCode);
      this.resendservice.resendVerification(this.onResponse.bind(this), verificationCode);
   }
  

@@ -25,15 +25,20 @@ export class LoginComponent implements OnInit {
     this._router.navigateByUrl('signup');
   }
   
- 
-  onResponse(res: string){
-    
+  onResponse(res: string, userID: string){
    this.response = res;
-   if (res == "Logged in!"){
-      this._router.navigateByUrl('userhome');
+   console.log(res);
+   if (res == "Go verify!"){
+       this._router.navigateByUrl('resend/:id');
+   } else if (res == "Logged in!"){
+       this._router.navigateByUrl('userhome/' + userID);
+   } else if (res == "Empty email has been entered" || res == "Empty password has been entered"){
+        alert("Enter valid credentials.");
+   } else if (res == "Admin!") {
+       this._router.navigateByUrl('admindash/'+ userID);
+   } else if (res == "User disabled"){
+       alert("Your account was disabled by an admin. Contact amali28@uwo.ca to resolve this deactivation.");
    }
-   if (res == "This account does not exist"){
-       alert("This account does not exist. Please check the information entered");
-   }
+   
 }
 }

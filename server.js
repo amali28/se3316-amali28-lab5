@@ -61,7 +61,6 @@ router.get('/', function(req, res) {
 
 router.route('/users')
 
-    //get function
     .get(function(req, res) {
         User.find(function(err, items) {
             User.email = req.body.email;
@@ -73,7 +72,6 @@ router.route('/users')
 
     });
     
-
 router.route('/login')
     .post(function(req, res) {
         
@@ -92,36 +90,41 @@ router.route('/login')
         
         User.findOne({email: email}, function(err, foundObject) {
             if (err){
-                console.log(err);
+                return res.send({message: "This account does not exist"});
             }
-            if (!foundObject){
-                res.send({message: "This account does not exist"});
+            if (foundObject === null){
+                return res.send({message: "This account does not exist"});
             } 
             
             var isValidPassword = bcrypt.compareSync(password, foundObject.password);
             
             if (!isValidPassword){
-                res.send({message: "The entered password is incorrect"})
+               return res.send({message: "The entered password is incorrect"})
             } else {
                 var isVerified = foundObject.isVerified;
+                var isAdmin = foundObject.isAdmin;
+                var isDisabled = foundObject.isDisabled;
             
-                if (!isVerified){
-                    res.send({message: "Go verify!"})
-                } else {
-                    
+                console.log(foundObject);
+            
+                if (isDisabled){
+                    return res.send({message: "User disabled", id: foundObject._id});
+                } else if (!isVerified){
+                    return res.send({message: "Go verify!", id: foundObject._id})
+                } else{
                     foundObject.isLoggedIn = true;
                     foundObject.save(function(err, updatedObject){
                        console.log(updatedObject);
                        if (err){
                            console.log(err);
                        } 
-                       if (updatedObject){
-                           res.send({message: "Logged in!"});
+                       if (!updatedObject.isAdmin){
+                         return  res.send({message: "Logged in!", id: foundObject._id});
                            
+                       } else {
+                         return  res.send({message: "Admin!", id: foundObject._id});
                        }
                     });
-                    
-                  
                     
                 }
             }
@@ -134,6 +137,19 @@ router.route('/homepage')
         res.send({message: 'Yo'});
     });
     
+router.route('/admindash/:id')
+    .post(function(req,res){
+        User.findOne({verificationCode: req.body.verificationCode.id}, function (err, foundObject){
+            if (err){
+                res.send({message: err});
+            } else {
+                if (foundObject.isAdmin != true){
+                    res.send("This man is not an admin");
+                }
+            }
+        });
+    });
+
 router.route('/resend/:id')
 
     .post(function(req,res){
@@ -144,7 +160,7 @@ router.route('/resend/:id')
                 res.send({message: err});
                 console.log(err);
             } 
-            
+
             if (foundObject){
                 res.send({message: "Email resent"})
                 sendEmailVerification(req.get('host'), foundObject.email);
@@ -185,7 +201,9 @@ router.route('/createuser')
            password: hash,
            verificationCode: verificationCode,
            isLoggedIn: false,
+           isDisabled: false,
            isVerified: false,
+           isAdmin: false,
         });
         
         console.log(newEmail);
@@ -230,7 +248,7 @@ function sendEmailVerification(host, client){
             emailVerification={
                        to : client,
                        subject : "PARKA EMAIL VERIFICATION",
-                       html : "Use the following code to URL to verify your account: " + verificationLink, 
+                       html : "Use the following URL to verify your account: " + verificationLink, 
                      }
         
             emailSender.sendMail(emailVerification, function(error, response){
@@ -242,10 +260,7 @@ function sendEmailVerification(host, client){
         return true;
 }
     
-    
-    
 router.get('/verify/:id',function(req,res){
- 
     console.log("Stepped into verify");
     User.findOne({verificationCode: req.params.id}, function (err, foundObject){
         console.log(foundObject);
@@ -272,15 +287,14 @@ router.route('/items')
 
     // create a bear (accessed at POST http://localhost:8080/api/bears)
     .post(function(req, res) {
-
-              // create a new instance of the Bear model
+        // create a new instance of the Bear model
         var item = new Item();
          item.name = req.body.name;  // update the bears info
          item.price = req.body.price;  
          item.quantity = req.body.quantity;
          item.tax = req.body.tax;
          item.id = req.body.id;
-    
+         item.descript = req.body.descript;
         // save the bear and check for errors
         item.save(function(err) {
             if (err){
@@ -300,8 +314,74 @@ router.route('/items')
         });
 
     });
-router.route('/items/:item_id')
 
+
+    
+router.route('/deleteusers/:id')
+    .delete(function(req, res) {
+		User.remove({
+			_id: req.params.id
+		}, function(err, bear) {
+			if (err) {
+				res.send(err);
+			}
+			res.json({ message: 'Successfully deleted user!' });
+		});
+	})
+	.put (function(req, res){
+	    User.findById(req.params.id, function(err, userFound) {
+	        if (err){
+	            res.send(err);
+	        }
+	       userFound.isAdmin = req.body.isAdmin;
+	       userFound.isDisabled = req.body.isDisabled;
+	       userFound.save(function(err){
+	           if (err){
+	               res.send(err)
+	           } 
+	           res.json({message: 'User updated!'});
+	       })
+	       
+	    })
+	})
+	
+
+router.route('/modify/:id')
+    .delete(function(req, res) {
+		Item.remove({
+			_id: req.params.id
+		}, function(err, bear) {
+			if (err) {
+				res.send(err);
+			}
+			res.json({ message: 'Successfully deleted item!' });
+		});
+	})
+	.put(function(req, res){
+	
+	    Item.findById(req.params.id, function(err, item){
+	       
+	       console.log(req.body);
+	        if (err){
+	            res.send(err);
+	        }
+	        item.name = req.body.name;
+	        item.price = req.body.price;
+	        item.descript = req.body.descript;
+	        item.quantity = req.body.quantity;
+	        
+	         // save the bear
+            item.save(function(err) {
+                if (err){
+                    res.send(err);
+                }
+                res.json({ message: 'item updated!' });
+            });
+	    })
+	})
+	
+
+router.route('/items')
     // get the bear with that id (accessed at GET http://localhost:8080/api/bears/:bear_id)
     .get(function(req, res) {
         Item.findById(req.params.item_id, function(err, item) {
@@ -323,7 +403,7 @@ router.route('/items/:item_id')
            item.name = req.body.name;  // update the bears info
            item.price = req.body.price;  
            item.quantity = req.body.quantity;
-           item.tax = req.body.tax;
+           item.descript = req.body.descript;
        
 
             // save the bear
@@ -331,23 +411,11 @@ router.route('/items/:item_id')
                 if (err){
                     res.send(err);
                 }
-                res.json({ message: 'item updated!' });
+                res.json({ message: 'item updated!'});
             });
 
         });
     })
-    // delete the bear with this id (accessed at DELETE http://localhost:8080/api/bears/:bear_id)
-    .delete(function(req, res) {
-        Item.remove({
-            _id: req.params.item_id
-        }, function(err, item) {
-            if (err){
-                res.send(err);
-            }
-            res.json({ message: 'Successfully deleted' });
-        });
-    });
-    
 
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api

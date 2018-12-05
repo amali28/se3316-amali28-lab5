@@ -6,7 +6,9 @@ var UserSchema  = new Schema({
 	password: String,
 	verificationCode: String,
 	isLoggedIn: Boolean,
-	isVerified: Boolean
+	isVerified: Boolean,
+	isDisabled: Boolean,
+	isAdmin: Boolean
 });
 
 module.exports = mongoose.model('User', UserSchema);

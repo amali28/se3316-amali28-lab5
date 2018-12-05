@@ -1,25 +1,31 @@
-<h2>
+<h3>
     List of Parkas
-</h2>
-
+</h3>
 <table>
     <tr *ngFor='let parka of _response'>
-        <td><b>Name</b><br> {{parka.name}}</td>
-        <td><b>Price</b><br>{{parka.price}}</td>
-        <td><b>ID</b><br>{{parka._id}}</td>
-        <td><b>Quantity</b><br>{{parka.quantity}}</td>
-        <td><b>Tax</b><br>{{parka.tax}}</td>
+        <td><b>Name</b><br> <input #name type="text" name="itemName" ng-model="item.name" required value={{parka.name}}></td>
+        <td><b>Price</b><br><input #price type="text" name="itemPrice" ng-model="item.price" required value={{parka.price}}></td>
+        <td><b>Quantity</b><br><input #quantity type="text" name="itemQuantity" ng-model="item.quantity" required value={{parka.quantity}}></td>
+        <td><b>Description</b><br><input #description type="text" name="itemDescription" ng-model="item.descript" required value={{parka.descript}}></td>
+        <td><b>Modify</b><br>
+        <button (click)="editParkaData(parka._id, name.value, price.value, quantity.value, description.value)">Save</button>
+        <button (click)="deleteParkaData(parka._id)">Delete</button>
+        </td>
+      
     </tr>
 </table>
 
-<button (click)="onClick()" >Get Parkas</button>
+<button (click)="onClick()">Get Parkas</button>
 
-<h2>
+<h3>
     Add a New Parka
-</h2>
+</h3>
 
 <input #name type="text" placeholder="Parka Name"/><br><br>
 <input #price type="text" placeholder="Price" /><br><br>
 <input #quantity type="text" placeholder="Quantity" /><br><br>
-<input #tax type ="text" value = "0.13" /><br><br>
-<button (click) = "addParka(name.value, price.value, quantity.value, tax.value)">Add</button>
+<input #description type="text" placeholder="Description" /><br><br>
+<button (click) = "addParka(name.value, price.value, quantity.value, description.value)">Add</button>
+
+<app-retrieveusers></app-retrieveusers>
+

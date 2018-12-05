@@ -19,7 +19,7 @@ export class LoginService {
           console.log(localStorage.getItem('user'));
       }
       
-      call(data['message']);
+      call(data['message'], data['id']);
     })
   }
 }
