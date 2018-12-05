@@ -136,7 +136,7 @@ router.route('/login')
 
 router.route('/homepage')
     .get(function(req, res){
-        res.send({message: 'Yo'});
+        res.send({message: 'You are now in the homepage'});
     });
     
 router.route('/admindash/:id')
@@ -146,7 +146,7 @@ router.route('/admindash/:id')
                 res.send({message: err});
             } else {
                 if (foundObject.isAdmin != true){
-                    res.send("This man is not an admin");
+                    res.send("Not admin");
                 }
             }
         });
@@ -207,9 +207,6 @@ router.route('/createuser')
            isVerified: false,
            isAdmin: false,
         });
-        
-        console.log(newEmail);
-        console.log(password);
         
         User.find({'email':newEmail}, function (err, acc){
             // if the response received demonstrates that the account has not been created, go forward with signing up the user
@@ -297,12 +294,15 @@ router.route('/items')
          item.tax = req.body.tax;
          item.id = req.body.id;
          item.descript = req.body.descript;
+         item.numberOfSales = req.body.numberOfSales;
+         item.comments = req.body.comments;
+         item.ratings = req.body.ratings;
         // save the bear and check for errors
         item.save(function(err) {
             if (err){
-               res.send(err);
+               return res.send(err);
             }
-            res.json({ message: 'Item created!' });
+            return res.json({ message: 'Item created!' });
         });
     })
     //get function
@@ -437,11 +437,49 @@ router.route('/policy/:id')
 			if (err) {
 				res.send(err);
 			}
-			res.json({ message: 'Successfully deleted policy' });
+		return	res.json({ message: 'Successfully deleted policy' });
 		});
 	})
     
 
+
+router.route('/reviews/:name')
+    .get(function(req, res) {
+        Item.find({name: req.params.name}, function(err, reviewsRetrieved) {
+            if (err){
+                res.send(err);
+            }
+            res.json(reviewsRetrieved);
+        });
+    })
+    
+    .post(function(req, res){
+       var email = req.body.email;
+        Item.findOne({name: req.params.name}, function(err, foundObject) {
+            if (err){
+                console.log(err);
+            }
+            
+            
+            if (foundObject.comments[4] != null){
+                 return res.send({message: 'Review limit has been reached!'});
+            } else {
+                if (foundObject.comments == null) {
+                return res.json({message: 'Both a comment and rating is required.'}); 
+            }
+            
+            foundObject.comments.push(" "+ email + " : " + req.body.comment); 
+                foundObject.ratings.push(req.body.rating);
+            foundObject.save(function(err){
+                if (err){
+                    console.log(err);
+                }
+                return res.json({message: 'Review created!'});
+            });
+         }
+        });
+    });
+    
 router.route('/modify/:id')
     .delete(function(req, res) {
 		Item.remove({
@@ -466,6 +504,7 @@ router.route('/modify/:id')
 	        item.descript = req.body.descript;
 	        item.quantity = req.body.quantity;
 	        
+	        
 	         // save the bear
             item.save(function(err) {
                 if (err){
@@ -476,7 +515,17 @@ router.route('/modify/:id')
 	    })
 	})
 	
+router.route('/itemspop')
+    .get(function(req, res) {
+		Item.find({quantity: { $gte: 1 }}).sort({numberOfSales: 'descending'}).exec(function(err, itemFound) {
+			if (err) {
+				res.send(err);
+			}
+			res.json(itemFound);
+		});
+	})
 
+    
 router.route('/items')
     // get the bear with that id (accessed at GET http://localhost:8080/api/bears/:bear_id)
     .get(function(req, res) {
@@ -500,6 +549,7 @@ router.route('/items')
            item.price = req.body.price;  
            item.quantity = req.body.quantity;
            item.descript = req.body.descript;
+           item.numberOfSales = req.body.numberOfSales;
        
 
             // save the bear

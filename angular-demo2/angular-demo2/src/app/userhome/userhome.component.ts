@@ -16,5 +16,9 @@ export class UserhomeComponent implements OnInit {
   retrievePolicies(){
     this._router.navigateByUrl('policy');
   }
+  
+  logOut(){
+    this._router.navigateByUrl('login');
+  }
 
 }

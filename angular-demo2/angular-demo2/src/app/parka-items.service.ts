@@ -13,6 +13,13 @@ export class ParkaItemsService {
     })
   }
   
+  getParkaByPop(call_back){
+    this._http.get('/api/itemspop').subscribe(data => {
+      console.log(data);
+      call_back(data);
+    })
+  }
+  
   getUserData(call_back){
     this._http.get('/api/users').subscribe(data => {
       console.log(data);
@@ -37,6 +44,14 @@ export class ParkaItemsService {
     this._http.post('/api/items', {name: p_name, price: p_price, quantity: p_quantity, descript: p_description, tax: p_tax}).subscribe(data => {
           console.log("POST success!");
           call_back(data);
+      });
+  }
+  
+  retrieveReviews(call_back, itemName: string){
+    this._http.get('/api/reviews/' + itemName).subscribe(data => {
+        var review = JSON.stringify(data);
+        console.log(review);
+         call_back(data);
       });
   }
 }

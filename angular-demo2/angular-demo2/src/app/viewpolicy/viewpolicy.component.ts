@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PolicyService } from '../policy.service'
+import { PolicyService } from '../policy.service';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 })
 export class ViewpolicyComponent implements OnInit {
 
-  private _response: Observable<any[]>;
+  private _response = '';
 
   constructor(private _policyService: PolicyService) { }
 
@@ -22,10 +22,10 @@ export class ViewpolicyComponent implements OnInit {
   }
   
 
-  onResponse(_res: Observable<any[]>){
+  onResponse(_res: string){
     this._response = _res;
     
-    if(_res == "Claim created!"){
+    if(this._response == "Claim created!"){
         alert("Your claim has been submitted");
     }
     }

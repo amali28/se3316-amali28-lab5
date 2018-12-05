@@ -9,8 +9,8 @@ var ItemSchema   = new Schema({
 	id: Number,
 	numberOfSales: Number,
 	descript: String, 
-	ratings: Array,
-	comments: Array,
+	ratings: Array(5),
+	comments: Array(5)
 });
 
 module.exports = mongoose.model('Item', ItemSchema);
