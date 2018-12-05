@@ -33,11 +33,15 @@ export class LoginComponent implements OnInit {
    } else if (res == "Logged in!"){
        this._router.navigateByUrl('userhome/' + userID);
    } else if (res == "Empty email has been entered" || res == "Empty password has been entered"){
-        alert("Enter valid credentials.");
+        alert("Enter valid email and password credentials.");
    } else if (res == "Admin!") {
        this._router.navigateByUrl('admindash/'+ userID);
    } else if (res == "User disabled"){
        alert("Your account was disabled by an admin. Contact amali28@uwo.ca to resolve this deactivation.");
+   } else if (res == "This account does not exist"){
+       alert(res);
+   } else {
+       alert("Please check your credentials");
    }
    
 }

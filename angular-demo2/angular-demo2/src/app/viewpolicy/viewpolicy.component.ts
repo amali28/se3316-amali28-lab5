@@ -15,7 +15,6 @@ export class ViewpolicyComponent implements OnInit {
 
   ngOnInit() {
       this._policyService.getPolicies(this.onResponse.bind(this));
-    
   }
   
 

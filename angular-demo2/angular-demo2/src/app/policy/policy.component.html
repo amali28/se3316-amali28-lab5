@@ -1,12 +1,19 @@
 <h2>Policies</h2>
+<h4>Description of workflow for Implementing DMCA notice & Takedown Policy</h4>
+<p>The DMCA provides a safe harbor for service providers that host user-generated content. Since even a single claim of copyright infringement can carry statutory damages of up to $150,000, 
+the possibility of being held liable for user-generated content could be very harmful for service providers.</p>
+<h4>Instructions for using tools provided for impplementing the DMCA Notice and Takedown Policy</h4>
+<p>To use the tools the DCMA notice, click get policies below. You can then edit the text box and save policies. Please
+be advised that once you make a change it is accessible by the public.</p>
 <button (click) ="getPolicies()">Get Policies</button><br><br>
 
 <div *ngFor = 'let policy of _response'>
-    <b>Policy 1</b><br><textarea #one type="text" name="itemName" ng-model="item.name" required value={{policy.policy1}}></textarea><br><br>
-    <b>Policy 2</b><br><textarea #two type="text" name="itemName" ng-model="item.name" required value={{policy.policy2}}></textarea><br><br>
-    <b>Policy 3</b><br><textarea #three type="text" name="itemName" ng-model="item.name" required value={{policy.policy3}}></textarea><br><br>
+    <b>Security and Private Policy</b><br><textarea #one type="text" name="itemName" ng-model="item.name" required value={{policy.policy1}}></textarea><br><br>
+    <b>DMCA Notice</b><br><textarea #two type="text" name="itemName" ng-model="item.name" required value={{policy.policy2}}></textarea><br><br>
+    <b>Takedown Policy</b><br><textarea #three type="text" name="itemName" ng-model="item.name" required value={{policy.policy3}}></textarea><br><br>
     <button (click)="savePolicies(policy._id, one.value, two.value, three.value)">Save Policies</button>
 </div>
+
 
 
 
