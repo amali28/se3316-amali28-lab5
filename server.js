@@ -391,6 +391,29 @@ router.route('/policy')
  })
  
 
+router.route('/buyitem/:id')
+    .put(function(req, res) {
+        var listOfCart = req.body.cartOfList;
+        var sizeOfCart = req.body.cartOfSize;
+        
+        for (let k = 0; k < sizeOfCart; k++){
+            Item.findOne({name: listOfCart[i].name}, function (err, itemFound){
+                if (err){
+                    res.send(err);
+                }
+                
+                itemFound.numberOfSales += Number(listOfCart[i].quantity);
+                itemFound.quantity -= listOfCart[i].quantity;
+                itemFound.save(function(err){
+                    if (err){
+                        return res.send(err);
+                    }
+                })
+            })
+        }
+       res.send({message:'Item updated!'}) 
+    });
+    
 router.route('/policy/:id')
 	.put(function(req, res){
 	
@@ -503,7 +526,6 @@ router.route('/modify/:id')
 	        item.price = req.body.price;
 	        item.descript = req.body.descript;
 	        item.quantity = req.body.quantity;
-	        
 	        
 	         // save the bear
             item.save(function(err) {

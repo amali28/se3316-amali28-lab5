@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { LoginService } from '../login.service';
+
 import { Observable } from 'rxjs';
 
 @Component({
@@ -13,18 +14,23 @@ export class LoginComponent implements OnInit {
 
   private response = '';
   
+
+  
   constructor(private _router: Router, private http: HttpClient, private loginservice: LoginService) { }
   ngOnInit() {
+      
   }
   
   login(email, password){
-     this.loginservice.validateAccountLogin(this.onResponse.bind(this), email, password)
+     this.loginservice.validateAccountLogin(this.onResponse.bind(this), email, password);
+    
   }
   
   signup(){
     this._router.navigateByUrl('signup');
   }
   
+ 
   onResponse(res: string, userID: string){
    this.response = res;
    console.log(res);

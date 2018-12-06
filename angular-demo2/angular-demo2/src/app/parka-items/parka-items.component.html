@@ -7,6 +7,8 @@
         <td><b>Price</b><br><input #price type="text" name="itemPrice" ng-model="item.price" required value={{parka.price}}></td>
         <td><b>Quantity</b><br><input #quantity type="text" name="itemQuantity" ng-model="item.quantity" required value={{parka.quantity}}></td>
         <td><b>Description</b><br><input #description type="text" name="itemDescription" ng-model="item.descript" required value={{parka.descript}}></td>
+        <td><b>Comments</b><p>{{parka.comments}}</p></td>
+        <td><b>Ratings</b><p>{{parka.ratings}}</p></td>
         <td><b>Modify</b><br>
         <button (click)="editParkaData(parka._id, name.value, price.value, quantity.value, description.value)">Save</button>
         <button (click)="deleteParkaData(parka._id)">Delete</button>

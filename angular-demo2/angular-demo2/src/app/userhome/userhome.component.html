@@ -1,3 +1,36 @@
 <h2>Welcome!</h2>
 <button (click) = "logOut()">Log Out</button>
 <button (click) = "retrievePolicies()">View Policies</button>
+
+<h3>Entire Catalog of Purchasable Items</h3>
+   <table border ="1" class = "listOfItems" *ngFor="let itemClicked of _retrieveItems" [class.selected] = "itemClicked === selectedItem" (click) = "onSelect(itemClicked)">
+      <tr>
+       <td><b>Name</b><br>{{itemClicked.name}}</td>
+       <td><b>Quantity</b><br>{{itemClicked.quantity}}</td><br>
+       <td><b>Number of Sales</b><br>{{itemClicked.numberOfSales}}</td><br><br>
+       </tr>
+    </table>
+
+<ng-container *ngIf = "showSelected">
+        <div ng-repeat = "let itemsSelected of reviewsRetrieved">
+             <h3>{{itemSelect.name}}</h3>
+            <b>Price</b><br>{{itemSelect.price}}<br>
+            <b>Description</b><br>{{itemSelect.descript}}<br><br>
+            <h3><b>Reviews For This Product</b><br></h3>
+                    <b>Rating:</b><br>{{itemSelect.ratings}}<br>
+                    <b>Comment:</b><br> {{itemSelect.comments}}<br><br>
+            <h3>Submit a Review for this Item</h3>
+            <h4>Username</h4>
+            <input type="text" placeholder="Enter a username!">
+            <h4>Comment</h4>
+            <input type="text" placeholder="Enter a comment!">
+            <h4>Rating (Out of 5)</h4>
+            <select #claimName>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            </select>
+        </div>
+</ng-container>
