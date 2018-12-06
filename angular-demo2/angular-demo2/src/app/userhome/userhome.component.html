@@ -21,16 +21,17 @@
                     <b>Comment:</b><br> {{itemSelect.comments}}<br><br>
             <h3>Submit a Review for this Item</h3>
             <h4>Username</h4>
-            <input type="text" placeholder="Enter a username!">
+            <input #userField type="text" placeholder="Enter a username!">
             <h4>Comment</h4>
-            <input type="text" placeholder="Enter a comment!">
+            <input #commentField type="text" placeholder="Enter a comment!">
             <h4>Rating (Out of 5)</h4>
-            <select #claimName>
+            <select #ratingSelected>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
             <option value="4">4</option>
             <option value="5">5</option>
-            </select>
+            </select><br><br>
+            <button (click) = "submitComment(itemSelect.name, userField.value, commentField.value, ratingSelected.value)">Submit Comment</button>
         </div>
 </ng-container>

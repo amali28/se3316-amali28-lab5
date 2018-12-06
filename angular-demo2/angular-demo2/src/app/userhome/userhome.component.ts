@@ -16,6 +16,8 @@ export class UserhomeComponent implements OnInit {
    private _retrieveItems: Observable<any[]>;
    
    private reviewsRetrieved: Observable<any[]>;
+   
+   private commentResponse = '';
      
   constructor(private _router: Router, private parkaserivce: ParkaItemsService) { }
   
@@ -23,7 +25,7 @@ export class UserhomeComponent implements OnInit {
     this.parkaserivce.getParkaData(this.onItemResponse.bind(this));
   }
   
-  onItemResponse(itemResponse: Observable<Any[]>){
+  onItemResponse(itemResponse: Observable<any[]>){
       this._retrieveItems = itemResponse;
   }
   
@@ -38,13 +40,23 @@ export class UserhomeComponent implements OnInit {
     this.reviewsRetrieved = retrieveRetrieved;
   }
   
+  submitComment(itemName: string, userField: string, commentField: string, ratingSelected:string){
+  
+    this.parkaserivce.postComment(itemName, userField, commentField, ratingSelected, this.onResponseComments.bind(this));
+  }
+  
+  
+  onResponseComments(res: string){
+    this.commentResponse = res;
+    console.log(res);
+  }
   
   itemSelect: Item
   
   onSelect(item: Item): void{
    this.showSelected = !this.showSelected;
    this.itemSelect= item; 
-   this._parkas.retrieveReviews(this.onResponseRatings.bind(this), this.itemSelect.name);
+   this.parkaserivce.retrieveReviews(this.onResponseRatings.bind(this), this.itemSelect.name);
   }
-
+  
 }

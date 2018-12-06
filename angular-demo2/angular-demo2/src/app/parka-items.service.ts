@@ -47,6 +47,12 @@ export class ParkaItemsService {
       });
   }
   
+  postComment(itemName: string, userField: string, commentField: string, ratingSelected:string, call_back){
+     this._http.post('/api/reviews/'+itemName, {email: userField, comment: commentField, rating: ratingSelected}).subscribe(data => {
+          console.log("Posted your review!");
+          call_back(data);
+      });
+  }
   retrieveReviews(call_back, itemName: string){
     this._http.get('/api/reviews/' + itemName).subscribe(data => {
         var review = JSON.stringify(data);
@@ -54,4 +60,6 @@ export class ParkaItemsService {
          call_back(data);
       });
   }
+  
+  
 }
