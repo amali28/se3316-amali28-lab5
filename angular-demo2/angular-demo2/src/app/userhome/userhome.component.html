@@ -2,12 +2,42 @@
 <button (click) = "logOut()">Log Out</button>
 <button (click) = "retrievePolicies()">View Policies</button>
 
+
+<h3>Shopping Cart</h3>
+<br>
+<table *ngFor="let itemInCart of cartResponse">
+    <tr>
+        <td><b>{{itemInCart.name}}</b></td>
+        <td><b>{{itemInCart.price}}</b></td>
+        <td><b>{{itemInCart.quantity}}</b></td>
+        <td><input type="number" #edited min="1" placeholder="{{ itemInCart.quantity }}"></td>
+        <td><button (click) = "eQuantityofItem(itemInCart.quantity, itemInCart.name)">Add to Cart</button></td>
+        <td><button (click) = "removeItems(itemInCart.name)">Remove Item</button></td>
+        <td><button (click) = "eCart()">Empty Cart</button></td>
+        <td><p>Total: {{totalNumber}}</p></td>
+        <td><button (click) = "acquireItemsFromCart()">Buy Items in Cart</button></td>
+    </tr>
+</table>
+
+<div *ngIf="acquired">
+    <table *ngFor = "let acquiredItem of invoiceOfCart">
+        <td><b>{{acquiredItem.name}}</b></td>
+        <td><b>{{acquiredItem.price}}</b></td>
+        <td><b>{{acquiredItem.quantity}}</b></td>
+        <td><b>Invoice Total Amount: {{invoiceTotal}}</b></td>
+      
+</table>
+</div>
+<button>Empty Cart</button>
+<button>Remove From Cart</button>
 <h3>Entire Catalog of Purchasable Items</h3>
    <table border ="1" class = "listOfItems" *ngFor="let itemClicked of _retrieveItems" [class.selected] = "itemClicked === selectedItem" (click) = "onSelect(itemClicked)">
       <tr>
        <td><b>Name</b><br>{{itemClicked.name}}</td>
        <td><b>Quantity</b><br>{{itemClicked.quantity}}</td><br>
        <td><b>Number of Sales</b><br>{{itemClicked.numberOfSales}}</td><br><br>
+       <td><b>Description</b><br>{{itemClicked.descript}}</td>
+       <td><b>Options</b><br><input #newQuantity placeholder="# of items"><button (click) ="appendItemToCart(itemClicked.price,itemClicked.name,newQuantity.value,itemClicked.quantity)">Add to Cart</button><button>Add to Collection</button></td>
        </tr>
     </table>
 

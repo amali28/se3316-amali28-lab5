@@ -6,6 +6,12 @@ export class ParkaItemsService {
 
   constructor(private _http: HttpClient) { }
   
+  getSortedParka(call_back){
+     this._http.get('/api/products').subscribe(data => {
+      console.log(data);
+      call_back(data);
+    })
+  }
   getParkaData(call_back){
     this._http.get('/api/items').subscribe(data => {
       console.log(data);
@@ -61,5 +67,10 @@ export class ParkaItemsService {
       });
   }
   
-  
+  acquiredItems(listOfItemsAcquire, numberOfItems, call_back){
+     this._http.put('/api/buyitem', {cartOfList: listOfItemsAcquire, cartOfSize: numberOfItems}).subscribe(data => {
+          console.log(data);
+          call_back(data);
+      });
+  }
 }

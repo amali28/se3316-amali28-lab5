@@ -61,6 +61,8 @@ router.get('/', function(req, res) {
 
 //posting 
 
+
+// this will retrieve all users for the admin
 router.route('/users')
 
     .get(function(req, res) {
@@ -74,6 +76,9 @@ router.route('/users')
 
     });
     
+    
+// route will check login credentials and response accordingly
+
 router.route('/login')
     .post(function(req, res) {
         
@@ -81,14 +86,17 @@ router.route('/login')
         var email = req.body.email;
         var password = req.body.password;
         
-        // check if the email is valid
+        // check if the email is valid and password before stepping in
         if (email === ""){
-            res.send({message: 'Empty email has been entered'});
+            return res.send({message: 'Empty email has been entered'});
         }
         
         if (password === ""){
-            res.send({message: "Empty password has been entered"});
+            return res.send({message: "Empty password has been entered"});
         }
+        
+        
+        // find the specific user matching what was typed in
         
         User.findOne({email: email}, function(err, foundObject) {
             if (err){
@@ -98,17 +106,20 @@ router.route('/login')
                 return res.send({message: "This account does not exist"});
             } 
             
+            // validate password
             var isValidPassword = bcrypt.compareSync(password, foundObject.password);
             
             if (!isValidPassword){
                return res.send({message: "The entered password is incorrect"})
             } else {
+                // check for verification, disabled and admin priviledges
                 var isVerified = foundObject.isVerified;
                 var isAdmin = foundObject.isAdmin;
                 var isDisabled = foundObject.isDisabled;
             
                 console.log(foundObject);
             
+            // check if user is disabled or an admin and route accordingly through backend responses
                 if (isDisabled){
                     return res.send({message: "User disabled", id: foundObject._id});
                 } else if (!isVerified){
@@ -134,11 +145,13 @@ router.route('/login')
         })
     });
 
+
 router.route('/homepage')
     .get(function(req, res){
         res.send({message: 'You are now in the homepage'});
     });
     
+// writes a unique code to the url for the admin
 router.route('/admindash/:id')
     .post(function(req,res){
         User.findOne({verificationCode: req.body.verificationCode.id}, function (err, foundObject){
@@ -152,10 +165,12 @@ router.route('/admindash/:id')
         });
     });
 
+// resend verification route 
 router.route('/resend/:id')
 
     .post(function(req,res){
         console.log();
+        // resends the 
         User.findOne({verificationCode: req.body.verificationCode.id}, function (err, foundObject){
         
             if (err){
@@ -181,7 +196,7 @@ router.route('/createuser')
         
         // check if the email entered is a valid email
         if (newEmail == "" || !validator.isEmail(newEmail)){
-            // string response 
+            // string response for invalid email
             return res.send({message: "Invalid email"});
         }
         
@@ -271,7 +286,7 @@ router.get('/verify/:id',function(req,res){
                            console.log(err);
                        } 
                        if (updatedObject){
-                           res.send({message: "VERIFIED"});
+                          return res.end("<h1>Verified</h1>");
                        }
                     });
         } else {
@@ -388,22 +403,25 @@ router.route('/policy')
          }
          res.json({message: 'Claim created!'})
      })
- })
+ });
  
 
-router.route('/buyitem/:id')
+router.route('/buyitem')
     .put(function(req, res) {
+    
         var listOfCart = req.body.cartOfList;
         var sizeOfCart = req.body.cartOfSize;
         
         for (let k = 0; k < sizeOfCart; k++){
-            Item.findOne({name: listOfCart[i].name}, function (err, itemFound){
+            Item.findOne({name: listOfCart[k].name}, function (err, itemFound){
+                
+                console.log(itemFound);
                 if (err){
                     res.send(err);
                 }
                 
-                itemFound.numberOfSales += Number(listOfCart[i].quantity);
-                itemFound.quantity -= listOfCart[i].quantity;
+                itemFound.numberOfSales += listOfCart[k].quantity;
+                itemFound.quantity -= listOfCart[k].quantity;
                 itemFound.save(function(err){
                     if (err){
                         return res.send(err);
@@ -547,7 +565,16 @@ router.route('/itemspop')
 		});
 	})
 
-    
+router.route('/products')
+.get(function(req, res) {
+		Item.find({quantity: { $gte: 1 }}).sort({numberSold: 'descending'}).exec(function(err, items) {
+			if (err) {
+				res.send(err);
+			}
+
+			res.json(items);
+		});
+	})
 router.route('/items')
     // get the bear with that id (accessed at GET http://localhost:8080/api/bears/:bear_id)
     .get(function(req, res) {

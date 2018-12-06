@@ -12,18 +12,18 @@ Users can view different PARKAs and acquire them, if they so choose to. Sign Up 
 
 <h3>Entire Catalog of Purchasable Items</h3>
 
-
    <table border ="1" class = "listOfItems" *ngFor="let itemClicked of _response" [class.selected] = "itemClicked === selectedItem" (click) = "onSelect(itemClicked)">
       <tr>
        <td><b>Name</b><br>{{itemClicked.name}}</td>
        <td><b>Quantity</b><br>{{itemClicked.quantity}}</td><br>
-       <td><b>Number of Sales</b><br>{{itemClicked.numberOfSales}}</td><br><br>
+       <td><b>Number of Sales</b><br>{{itemClicked.numberOfSales}}</td>
+       <td><b>Description</b><br>{{itemClicked.descript}}</td><br>
        </tr>
     </table>
 
 <ng-container *ngIf = "showSelected">
-   
         <div ng-repeat = "let itemsSelected of reviewsRetrieved">
+            <h2>Invoice of your purchases</h2>
              <h3>{{itemSelect.name}}</h3>
             <b>Price</b><br>{{itemSelect.price}}<br>
             <b>Description</b><br>{{itemSelect.descript}}<br><br>
